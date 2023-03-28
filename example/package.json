@@ -1,0 +1,19 @@
+{
+  "name": "example",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "generate-content-spreadsheet": "1.0.0",
+    "next": "13.2.1",
+    "react": "18.2.0"
+  },
+  "devDependencies": {
+    "typescript": "4.9.5"
+  }
+}
