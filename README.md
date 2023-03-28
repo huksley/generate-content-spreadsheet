@@ -2,7 +2,7 @@
 
 Use Google Spreadsheet as simple, painless, robust CMS for text and structured content!
 
-From your (publicly shared) Google Spreadsheet, creates content as JavaScript (TypeScript) object and allows it to be automatically updated whenever you recompile your code.
+From your (publicly shared) Google Spreadsheet, creates content as JavaScript (TypeScript) object and allows it to be automatically updated whenever you recompile your code and update the spreadsheet.
 
 Works beautifully with NextJS or any Webpack environment where you can add Webpack plugin!
 
@@ -22,7 +22,7 @@ const nextConfig = {
   webpack: (config, { isServer }) => {
     config.plugins?.push(
       new GenerateContentSpreadsheetPlugin(
-        // Script it will write
+        // Script it will write (can be either .js or .ts)
         __dirname + "/components/Content.ts",
         // Variable in source file
         "Strings",
@@ -55,12 +55,12 @@ It uses [public-google-sheets-parser](https://www.npmjs.com/package/public-googl
 
 It expects spreadsheet to have following REQUIRED columns:
 
-- key - JQ path to the object where to put the value, for example "title" or "content.title" or event "content.description[]"
-- value - String value to put in the object. WARNING: Only string values are supported!
+- **key** - JQ path to the object where to put the value, for example "title" or "content.title" or event "content.description[]"
+- **value** - String value to put in the object. WARNING: Only string values are supported!
 
-### Example spreadsheet format:
+### Spreadsheet format:
 
-Create Google Spreadsheet with following columns, and then share it publicly (File => Share => Anyone with the link can view).
+It expects Google Spreadsheet with the following columns:
 
 | key                | value                       |
 | ------------------ | --------------------------- |
@@ -69,7 +69,7 @@ Create Google Spreadsheet with following columns, and then share it publicly (Fi
 | root.description[] | My index page description 1 |
 | root.description[] | My index page description 2 |
 
-### Example output:
+### Resulting output:
 
 ```js
 export const Strings = {
@@ -83,9 +83,7 @@ export const Strings = {
 
 ### Ready-to-use example
 
-You can find ready-to-use example in the [example](./example) folder.
-
-[Click here]() to clone it as new git repository.
+You can find ready-to-use NextJS example in the [example](./example) folder.
 
 ## Installation
 
@@ -93,11 +91,20 @@ You can find ready-to-use example in the [example](./example) folder.
 npm i generate-content-spreadsheet
 ```
 
+1. Create Google Spreadsheet
+2. Share it publicly (File => Share => Anyone with the link can view)
+3. Add Webpack plugin
+4. Seen plugin generates source file with content
+5. Import and use it in your front-end code
+6. Update spreadsheet and recompile your code
+7. ...
+8. Profit!
+
 ## FAQ
 
 ### Why?
 
-I needed a simple way to manage content for my NextJS website. I wanted to use Google Spreadsheet as a CMS, but I didn't want to use any of the existing solutions, because they were either too complicated, too expensive, or too limited.
+I needed a simple way to manage content for my NextJS website. I wanted to use Google Spreadsheet as a CMS, but I didn't want to use any of the existing solutions, because they were either too complicated or too expensive.
 
 ### Why not use Headless CMS?
 
