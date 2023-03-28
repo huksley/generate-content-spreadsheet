@@ -58,7 +58,9 @@ It expects spreadsheet to have following REQUIRED columns:
 - key - JQ path to the object where to put the value, for example "title" or "content.title" or event "content.description[]"
 - value - String value to put in the object. WARNING: Only string values are supported!
 
-### Example table:
+### Example spreadsheet format:
+
+Create Google Spreadsheet with following columns, and then share it publicly (File => Share => Anyone with the link can view).
 
 | key                | value                       |
 | ------------------ | --------------------------- |
@@ -97,9 +99,9 @@ npm i generate-content-spreadsheet
 
 I needed a simple way to manage content for my NextJS website. I wanted to use Google Spreadsheet as a CMS, but I didn't want to use any of the existing solutions, because they were either too complicated, too expensive, or too limited.
 
-### Why not use Google Sheets API?
+### Why not use Headless CMS?
 
-If you have lots of images, videos, or other files, then you will need to use fully featured CMS. But if you only need to manage text content, then you can use this package.
+If you have lots of images, videos, or other files, then you will need to use fully featured CMS. But if you only need to manage simple text content, then you can use this package.
 
 ### I am getting wrong columns
 
