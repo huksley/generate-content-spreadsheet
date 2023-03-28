@@ -4,14 +4,17 @@ const { GenerateContentSpreadsheetPlugin } = require("generate-content-spreadshe
 const nextConfig = {
   reactStrictMode: false,
   webpack: (config, { isServer }) => {
-    config.plugins?.push(
-      new GenerateContentSpreadsheetPlugin(
-        __dirname + "/components/Content.ts",
-        "Strings",
-        "1RXjhi32S2zIfFivybqL95tKybpN66z-d7skajXJ1jsM",
-        "Strings"
-      )
-    );
+    // Remove this check to enable the plugin
+    process.env.EXAMPLE_DISABLE === "1"
+      ? null
+      : config.plugins?.push(
+          new GenerateContentSpreadsheetPlugin(
+            __dirname + "/components/Content.ts",
+            "Strings",
+            "1RXjhi32S2zIfFivybqL95tKybpN66z-d7skajXJ1jsM",
+            "Strings"
+          )
+        );
     return config;
   },
 };
