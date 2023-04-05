@@ -88,7 +88,6 @@ const parse = async (spreadsheetId, sheetName, sheetId, fs, file, variable) => {
   logger.verbose("Parsing", spreadsheetId, "tab", sheetName ?? sheetId);
   const parser = new PublicGoogleSheetsParser(spreadsheetId, { sheetName });
   const rows = await parser.parse();
-  console.info(rows);
   const data = createStructuredObject(rows);
 
   if (file !== undefined) {
