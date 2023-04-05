@@ -123,9 +123,9 @@ ${types.declareType}
  */
 export const update = async () => {
   try {
-    const data = await parse(undefined, undefined, undefined, "${spreadsheetId}", ${
-      sheetName ? '"' + sheetName + '"' : "undefined"
-    }, ${sheetId ? '"' + sheetId + '"' : "undefined"});
+    const data = await parse("${spreadsheetId}", ${sheetName ? '"' + sheetName + '"' : "undefined"}, ${
+      sheetId ? '"' + sheetId + '"' : "undefined"
+    }, undefined, undefined, undefined);
     const updated = data${types.castToType};
     ${variable} = updated;
     return updated;
