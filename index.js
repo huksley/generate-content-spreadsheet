@@ -33,8 +33,26 @@ function createStructuredObject(data) {
   for (const { key, value } of data) {
     const keys = key.split(".");
     let obj = result;
-    let isArray = false;
-    let prev = obj;
+
+    let val = value;
+    if (typeof val === "string") {
+      val = val.trim();
+      if (val === "TRUE" || val === "true") {
+        val = true;
+      } else if (val === "FALSE" || val === "false") {
+        val = false;
+      } else if (value === "NULL") {
+        val = null;
+      } else if (val.match(/^-?\d+\.?\d*$/)) {
+        // match number
+        val = Number(val);
+      }
+      // Match hexadecimal in format 0x123456
+      else if (val.match(/^0x[0-9a-fA-F]+$/)) {
+        val = Number(val);
+      }
+    }
+
     for (let i = 0; i < keys.length; i++) {
       const k = keys[i];
       const last = i === keys.length - 1;
@@ -43,14 +61,18 @@ function createStructuredObject(data) {
         if (k.endsWith("[]")) {
           const arrayKey = k.slice(0, -2);
           const narr = obj[arrayKey] || [];
-          narr.push(value);
+          narr.push(val);
           obj[arrayKey] = narr;
         } else {
-          obj[k] = value;
+          obj[k] = val;
         }
       } else {
-        const nobj = obj[k] || {};
-        prev = obj;
+        let nobj = obj[k] || {};
+        if (typeof nobj === "string") {
+          console.warn("Unexpected string value", keys.slice(0, i + 1).join("."));
+          nobj = {};
+        }
+        obj[k] = nobj;
         obj = nobj;
         if (i === 0) {
           result[k] = obj;
@@ -62,10 +84,11 @@ function createStructuredObject(data) {
   return result;
 }
 
-const parse = async (fs, file, variable, spreadsheetId, sheetName, sheetId) => {
+const parse = async (spreadsheetId, sheetName, sheetId, fs, file, variable) => {
   logger.verbose("Parsing", spreadsheetId, "tab", sheetName ?? sheetId);
   const parser = new PublicGoogleSheetsParser(spreadsheetId, { sheetName });
   const rows = await parser.parse();
+  console.info(rows);
   const data = createStructuredObject(rows);
 
   if (file !== undefined) {
@@ -149,15 +172,15 @@ class GenerateContentSpreadsheetPlugin {
         this.dependencies = [];
         this.dependencies.push(this.file);
         parse(
+          this.spreadsheetId,
+          this.sheetName,
+          this.sheetId,
           {
             ...compiler.inputFileSystem,
             ...compiler.outputFileSystem,
           },
           this.file,
-          this.variable,
-          this.spreadsheetId,
-          this.sheetName,
-          this.sheetId
+          this.variable
         )
           .then(() => callback())
           .catch((e) => {
@@ -172,5 +195,6 @@ class GenerateContentSpreadsheetPlugin {
 
 module.exports = {
   parse,
+  createStructuredObject,
   GenerateContentSpreadsheetPlugin,
 };
