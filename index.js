@@ -1,4 +1,5 @@
 const PublicGoogleSheetsParser = require("public-google-sheets-parser");
+const { statSync, readFileSync, writeFileSync } = require("fs");
 
 const logger = console;
 logger.verbose = process.env.LOG_VERBOSE === "1" ? logger.info : () => {};
@@ -158,6 +159,21 @@ class GenerateContentSpreadsheetPlugin {
     this.dependencies = [];
   }
 
+  run(fs) {
+    return parse(
+      this.spreadsheetId,
+      this.sheetName,
+      this.sheetId,
+      fs ?? {
+        statSync,
+        readFileSync,
+        writeFileSync,
+      },
+      this.file,
+      this.variable
+    );
+  }
+
   apply(compiler) {
     if (compiler.hooks?.afterCompile) {
       compiler.hooks.afterCompile.tap(GenerateContentSpreadsheetPlugin.name, (compilation) => {
@@ -170,17 +186,10 @@ class GenerateContentSpreadsheetPlugin {
       compiler.hooks.beforeCompile.tapAsync(GenerateContentSpreadsheetPlugin.name, (context, callback) => {
         this.dependencies = [];
         this.dependencies.push(this.file);
-        parse(
-          this.spreadsheetId,
-          this.sheetName,
-          this.sheetId,
-          {
-            ...compiler.inputFileSystem,
-            ...compiler.outputFileSystem,
-          },
-          this.file,
-          this.variable
-        )
+        run({
+          ...compiler.inputFileSystem,
+          ...compiler.outputFileSystem,
+        })
           .then(() => callback())
           .catch((e) => {
             logger.warn("Failed to write", e);
