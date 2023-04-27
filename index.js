@@ -1,5 +1,4 @@
 const PublicGoogleSheetsParser = require("public-google-sheets-parser");
-const { statSync, readFileSync, writeFileSync } = require("fs");
 
 const logger = console;
 logger.verbose = process.env.LOG_VERBOSE === "1" ? logger.info : () => {};
@@ -160,18 +159,15 @@ class GenerateContentSpreadsheetPlugin {
   }
 
   run(fs) {
-    return parse(
-      this.spreadsheetId,
-      this.sheetName,
-      this.sheetId,
-      fs ?? {
+    if (fs === undefined) {
+      const { statSync, readFileSync, writeFileSync } = require("fs");
+      fs = {
         statSync,
         readFileSync,
         writeFileSync,
-      },
-      this.file,
-      this.variable
-    );
+      };
+    }
+    return parse(this.spreadsheetId, this.sheetName, this.sheetId, fs, this.file, this.variable);
   }
 
   apply(compiler) {
