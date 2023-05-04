@@ -30,8 +30,9 @@ logger.verbose = process.env.LOG_VERBOSE === "1" ? logger.info : () => {};
 function createStructuredObject(data) {
   const result = {};
 
-  for (const { key, value } of data) {
-    const keys = key.split(".");
+  for (let i = 0; i < data.length; i++) {
+    const { key, value } = data[i];
+    const keys = key?.split(".") ?? [];
     let obj = result;
 
     let val = value;
@@ -88,7 +89,20 @@ const parse = async (spreadsheetId, sheetName, sheetId, fs, file, variable) => {
   logger.verbose("Parsing", spreadsheetId, "tab", sheetName ?? sheetId);
   const parser = new PublicGoogleSheetsParser(spreadsheetId, { sheetName });
   const rows = await parser.parse();
-  const data = createStructuredObject(rows);
+  if (!Array.isArray(rows) || rows.length === 0) {
+    throw new Error("Spreadsheet" + spreadsheetId + " tab " + sheetName ?? sheetId + " have no rows");
+  }
+
+  let data = {};
+  try {
+    data = createStructuredObject(rows);
+  } catch (e) {
+    console.error("Failed to parse spreadsheetId", spreadsheetId, "error", e);
+  }
+
+  if (Object.keys(data).length === 0) {
+    throw new Error("Spreadsheet" + spreadsheetId + " tab " + sheetName ?? sheetId + " is empty");
+  }
 
   if (file !== undefined) {
     const types =
@@ -149,5 +163,5 @@ export const update = async () => {
 
 module.exports = {
   parse,
-  createStructuredObject
+  createStructuredObject,
 };
