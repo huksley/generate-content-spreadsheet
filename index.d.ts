@@ -1,4 +1,4 @@
-import type { parse, createStructuredObject } from "./parse.d.ts";
+import { parse, createStructuredObject } from "./parse.d.ts";
 
 declare module "generate-content-spreadsheet/parse" {
   export { parse, createStructuredObject };
