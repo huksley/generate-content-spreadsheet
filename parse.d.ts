@@ -5,7 +5,7 @@
  * @param spreadsheetId Spreadsheet ID
  * @param sheetName Sheet name, optional, if not provided will use first sheet
  * @param sheetId Sheet ID, optional, if not provided will use first sheet
- * @param fs Filesystem module (i.e. require('fs'))
+ * @param fs Filesystem module (i.e. require('fs')) only when running as Webpack plugin
  * @param fileName Source code file to write.
  * @param variable Variable name
  * @returns Promise with parsed object

@@ -104,7 +104,7 @@ const parse = async (spreadsheetId, sheetName, sheetId, fs, file, variable) => {
     throw new Error("Spreadsheet" + spreadsheetId + " tab " + sheetName ?? sheetId + " is empty");
   }
 
-  if (file !== undefined) {
+  if (fs && file !== undefined) {
     const types =
       file.endsWith(".ts") || file.endsWith(".tsx")
         ? {

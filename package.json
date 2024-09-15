@@ -1,6 +1,6 @@
 {
   "name": "generate-content-spreadsheet",
-  "version": "1.0.12",
+  "version": "1.0.15",
   "description": "Use Google Spreadsheet as simple, painless, robust CMS for text and structured content",
   "main": "index.js",
   "repository": "https://github.com/huksley/generate-content-spreadsheet.git",
@@ -10,6 +10,16 @@
   "homepage": "https://github.com/huksley/generate-content-spreadsheet",
   "private": false,
   "scripts": {},
+  "exports": {
+    ".": {
+      "import": "./index.js",
+      "require": "./index.js"
+    },
+    "./parse": {
+      "import": "./parse.js",
+      "require": "./parse.js"
+    }
+  },
   "author": "Ruslan Gainutdinov",
   "license": "MIT",
   "dependencies": {
